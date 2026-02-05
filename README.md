@@ -11,7 +11,6 @@ Aplicación web para gestionar incidencias usando Python.
 ### templates/base.html
 - Plantilla base con el diseño general
 - Incluye Chart.js para los gráficos
-- Define los estilos CSS
 - Tiene bloques: titulo, header, contenido, scripts
 
 ### templates/informe.html
@@ -19,10 +18,7 @@ Aplicación web para gestionar incidencias usando Python.
 - Muestra 3 cajas con: Total, Resueltas, Porcentaje
 - Formulario de filtros (categoría y gravedad)
 - Tabla con las incidencias
-- 2 gráficos: por categoría (barras) y por estado (circular)
-
-## Modificación obligatoria
-Se añadió un segundo gráfico (por estado) que muestra las incidencias abiertas vs resueltas.
+- 2 gráficos: por categoría y por estado
 
 ## Cómo ejecutar
 ```
@@ -35,4 +31,5 @@ uvicorn main:app --reload
 
 - 
 <img width="1904" height="954" alt="2" src="https://github.com/user-attachments/assets/7747060d-a7bb-4fb0-b7ab-5b1c336756e4" />
+
 
