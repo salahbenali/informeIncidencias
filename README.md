@@ -2,8 +2,6 @@
 
 Aplicación web para gestionar incidencias usando Python.
 
-## Archivos
-
 ### main.py
 - Importa FastAPI y Jinja2
 - Define una lista de incidencias con: id, texto, categoria, gravedad, estado
@@ -30,7 +28,11 @@ Se añadió un segundo gráfico (por estado) que muestra las incidencias abierta
 ```
 uvicorn main:app --reload
 ```
-Abrir en el navegador: http://localhost:8000/informe
 
 ## Captura
-*(Añadir aquí captura con filtro aplicado)*
+- 
+<img width="1914" height="977" alt="1" src="https://github.com/user-attachments/assets/14cc8a00-6435-40d0-b3c8-4e86eca0af17" />
+
+- 
+<img width="1904" height="954" alt="2" src="https://github.com/user-attachments/assets/7747060d-a7bb-4fb0-b7ab-5b1c336756e4" />
+
