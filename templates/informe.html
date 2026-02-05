@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block titulo %}Informe de Incidencias{% endblock %}
+
+{% block contenido %}
+
+<!-- Resumen -->
+<div class="summary-stats">
+    <div class="stat-box">
+        <div class="stat-value">{{ resumen.total }}</div>
+        <div>Total</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-value">{{ resumen.resueltas }}</div>
+        <div>Resueltas</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-value">{{ resumen.porcentaje_resueltas }}%</div>
+        <div>Porcentaje</div>
+    </div>
+</div>
+
+<!-- Filtros -->
+<div class="card">
+    <h3>Filtros</h3>
+    <form action="/informe" method="get" style="display: flex; gap: 15px; align-items: end;">
+        <div>
+            <label>Categoría:</label><br>
+            <select name="categoria" style="padding: 5px; width: 150px;">
+                <option value="">Todas</option>
+                <option value="hardware" {% if filters.categoria=='hardware' %}selected{% endif %}>Hardware</option>
+                <option value="software" {% if filters.categoria=='software' %}selected{% endif %}>Software</option>
+                <option value="red" {% if filters.categoria=='red' %}selected{% endif %}>Red</option>
+            </select>
+        </div>
+        <div>
+            <label>Gravedad mínima:</label><br>
+            <input type="number" name="min_gravedad" min="1" max="5" value="{{ filters.min_gravedad }}"
+                style="padding: 5px; width: 80px;">
+        </div>
+        <div>
+            <button type="submit" class="btn">Filtrar</button>
+            <a href="/informe" class="btn" style="background: #95a5a6; margin-left: 5px;">Reset</a>
+        </div>
+    </form>
+</div>
+
+<!-- Tabla -->
+<div class="card">
+    <h3>Listado de Incidencias</h3>
+    {% if incidencias %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Descripción</th>
+                <th>Categoría</th>
+                <th>Gravedad</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inc in incidencias %}
+            <tr>
+                <td>{{ inc.id }}</td>
+                <td>{{ inc.texto }}</td>
+                <td>{{ inc.categoria }}</td>
+                <td>
+                    {% if inc.gravedad >= 4 %}
+                    <span class="badge bg-red">{{ inc.gravedad }}</span>
+                    {% elif inc.gravedad == 3 %}
+                    <span class="badge bg-orange">{{ inc.gravedad }}</span>
+                    {% else %}
+                    <span class="badge bg-green">{{ inc.gravedad }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if inc.estado == 'resuelta' %}
+                    <span class="badge bg-green">Resuelta</span>
+                    {% else %}
+                    <span class="badge bg-yellow">Abierta</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No hay incidencias con esos filtros.</p>
+    {% endif %}
+</div>
+
+<!-- Gráficos -->
+<div class="grid-2">
+    <div class="card">
+        <h3>Por Categoría</h3>
+        <canvas id="graficoCategoria"></canvas>
+    </div>
+    <div class="card">
+        <h3>Por Estado (Modificación)</h3>
+        <canvas id="graficoEstado"></canvas>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Gráfico 1: Por Categoría (barras)
+    new Chart(document.getElementById('graficoCategoria'), {
+        type: 'bar',
+        data: {
+            labels: ['Red', 'Hardware', 'Software'],
+            datasets: [{
+                label: 'Cantidad',
+                data: [{{ chart_data.cat_values[0] }}, {{ chart_data.cat_values[1] }}, {{ chart_data.cat_values[2] }}],
+        backgroundColor: ['#e74c3c', '#3498db', '#9b59b6']
+            }]
+        }
+    });
+
+    // Gráfico 2: Por Estado (circular)
+    new Chart(document.getElementById('graficoEstado'), {
+        type: 'pie',
+        data: {
+            labels: ['Abiertas', 'Resueltas'],
+            datasets: [{
+                data: [{{ chart_data.estado_values[0] }}, {{ chart_data.estado_values[1] }}],
+        backgroundColor: ['#f39c12', '#27ae60']
+    }]
+        }
+    });
+</script>
+{% endblock %}
